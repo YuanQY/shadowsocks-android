@@ -51,13 +51,11 @@ import java.io._
 import android.net.VpnService
 import org.apache.http.conn.util.InetAddressUtils
 import android.os.Message
-import scala.Some
 import scala.concurrent.ops._
 import org.apache.commons.net.util.SubnetUtils
 import java.net.InetAddress
 import com.github.shadowsocks.utils._
 import scala.Some
-import com.github.shadowsocks.ProxiedApp
 
 object ShadowVpnService {
   def isServiceStarted(context: Context): Boolean = {
@@ -128,15 +126,12 @@ class ShadowVpnService extends VpnService {
       val line = reader.readLine
       return Integer.valueOf(line)
     } catch {
-      case e: FileNotFoundException => {
+      case e: FileNotFoundException =>
         Log.e(TAG, "Cannot open pid file: " + name)
-      }
-      case e: IOException => {
+      case e: IOException =>
         Log.e(TAG, "Cannot read pid file: " + name)
-      }
-      case e: NumberFormatException => {
+      case e: NumberFormatException =>
         Log.e(TAG, "Invalid pid", e)
-      }
     }
     -1
   }
@@ -165,9 +160,8 @@ class ShadowVpnService extends VpnService {
       val pi: PackageInfo = getPackageManager.getPackageInfo(getPackageName, 0)
       version = pi.versionName
     } catch {
-      case e: PackageManager.NameNotFoundException => {
+      case e: PackageManager.NameNotFoundException =>
         version = "Package name not found"
-      }
     }
     version
   }
@@ -197,12 +191,11 @@ class ShadowVpnService extends VpnService {
         try {
           config = Config.getPublicConfig(getBaseContext, container, config)
         } catch {
-          case ex: Exception => {
+          case ex: Exception =>
             notifyAlert(getString(R.string.forward_fail), getString(R.string.service_failed))
             stopSelf()
             handler.sendEmptyMessageDelayed(MSG_CONNECT_FAIL, 500)
             return
-          }
         }
       }
 
@@ -246,8 +239,7 @@ class ShadowVpnService extends VpnService {
     try {
       t.join(300)
     } catch {
-      case ignored: InterruptedException => {
-      }
+      case ignored: InterruptedException =>
     }
     !t.isAlive
   }
@@ -312,13 +304,12 @@ class ShadowVpnService extends VpnService {
     try {
       conn = builder.establish()
     } catch {
-      case ex: IllegalStateException => {
+      case ex: IllegalStateException =>
         val msg = new Message()
         msg.what = MSG_VPN_ERROR
         msg.obj = ex.getMessage
         handler.sendMessage(msg)
         conn = null
-      }
       case ex: Exception => conn = null
     }
 
@@ -339,7 +330,7 @@ class ShadowVpnService extends VpnService {
       + "--loglevel 3 "
       + "--pid %stun2socks.pid")
       .format(PRIVATE_VLAN.format("2"), PRIVATE_VLAN.format("1"), config.localPort, fd, VPN_MTU,
-      BASE)
+        BASE)
     if (BuildConfig.DEBUG) Log.d(TAG, cmd)
     System.exec(cmd)
   }

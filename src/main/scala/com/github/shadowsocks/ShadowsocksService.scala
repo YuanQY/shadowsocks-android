@@ -59,11 +59,8 @@ import java.util.{TimerTask, Timer}
 import android.net.TrafficStats
 import android.graphics._
 import scala.concurrent.ops._
-import scala.Some
 import com.github.shadowsocks.utils._
 import scala.Some
-import com.github.shadowsocks.ProxiedApp
-import com.github.shadowsocks.TrafficStat
 
 case class TrafficStat(tx: Long, rx: Long, timestamp: Long)
 
@@ -204,8 +201,9 @@ class ShadowsocksService extends Service {
       val task = new TimerTask {
         def run() {
           val pm = getSystemService(Context.POWER_SERVICE).asInstanceOf[PowerManager]
-          val now = new TrafficStat(TrafficStats.getUidTxBytes(uid),
-            TrafficStats.getUidRxBytes(uid), java.lang.System.currentTimeMillis())
+          val now = new
+              TrafficStat(TrafficStats.getUidTxBytes(uid), TrafficStats.getUidRxBytes(uid),
+                java.lang.System.currentTimeMillis())
           val txRate = ((now.tx - last.tx) / 1024 / TIMER_INTERVAL).toInt
           val rxRate = ((now.rx - last.rx) / 1024 / TIMER_INTERVAL).toInt
           last = now
@@ -217,18 +215,18 @@ class ShadowsocksService extends Service {
           }
           if ((pm.isScreenOn && state == State.CONNECTED) || (txRate == 0 && rxRate == 0)) {
             notifyForegroundAlert(getString(R.string.forward_success),
-              getString(R.string.service_status).format(math.max(txRate, rxRate)), math.max(txRate, rxRate))
+              getString(R.string.service_status).format(math.max(txRate, rxRate)),
+              math.max(txRate, rxRate))
           }
         }
       }
-      last = new TrafficStat(TrafficStats.getUidTxBytes(uid),
-        TrafficStats.getUidRxBytes(uid), java.lang.System.currentTimeMillis())
+      last = new TrafficStat(TrafficStats.getUidTxBytes(uid), TrafficStats.getUidRxBytes(uid),
+        java.lang.System.currentTimeMillis())
       timer = new Timer(true)
       timer.schedule(task, TIMER_INTERVAL * 1000, TIMER_INTERVAL * 1000)
     }
 
     spawn {
-
       if (config.proxy == "198.199.101.152") {
         val container = getApplication.asInstanceOf[ShadowsocksApplication].tagContainer
         try {
@@ -344,8 +342,9 @@ class ShadowsocksService extends Service {
 
     val icon = getResources.getDrawable(R.drawable.ic_stat_shadowsocks)
     if (rate >= 0) {
-      val bitmap =Utils.getBitmap(rate.toString, icon.getIntrinsicWidth * 4,
-        icon.getIntrinsicHeight * 4, Color.TRANSPARENT)
+      val bitmap = Utils
+        .getBitmap(rate.toString, icon.getIntrinsicWidth * 4, icon.getIntrinsicHeight * 4,
+        Color.TRANSPARENT)
       builder.setLargeIcon(bitmap)
 
       if (rate < 1000) {
@@ -356,7 +355,6 @@ class ShadowsocksService extends Service {
       } else {
         builder.setSmallIcon(R.drawable.ic_stat_speed, 1091)
       }
-
     } else {
       builder.setSmallIcon(R.drawable.ic_stat_shadowsocks)
     }
@@ -368,7 +366,7 @@ class ShadowsocksService extends Service {
       .setContentText(info)
       .setContentIntent(contentIntent)
       .addAction(android.R.drawable.ic_menu_close_clear_cancel, getString(R.string.stop),
-      actionIntent)
+        actionIntent)
 
     startForegroundCompat(1, builder.build)
   }

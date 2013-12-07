@@ -5,8 +5,8 @@ import sbtandroid._
 import sbtandroid.AndroidPlugin._
 
 object App {
-  val version = "2.0.6"
-  val versionCode = 57
+  val version = "2.1.0"
+  val versionCode = 58
 }
 
 object General {
@@ -17,7 +17,7 @@ object General {
     versionCode := App.versionCode,
     scalaVersion := "2.10.3",
     compileOrder := CompileOrder.JavaThenScala,
-    platformName := "android-16",
+    platformName := "android-19",
     resolvers += "madeye-maven" at "http://madeye-maven-repository.googlecode.com/git",
     resolvers += "central-maven" at "http://repo.maven.apache.org/maven2"
   )

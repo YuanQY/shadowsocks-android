@@ -9,16 +9,15 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.actionbarsherlock" % "actionbarsherlock" % "4.4.0" artifacts(Artifact("actionbarsherlock", "apklib", "apklib")),
-  "net.saik0.android.unifiedpreference" % "unifiedpreference" % "0.0.2" artifacts(Artifact("unifiedpreference", "apklib", "apklib")),
-  "org.jraf" % "android-switch-backport" % "1.0" artifacts(Artifact("android-switch-backport", "apklib", "apklib")),
-  "net.simonvt.menudrawer" % "menudrawer" % "3.0.4" artifacts(Artifact("menudrawer", "apklib", "apklib"))
-)
-
-libraryDependencies ++= Seq(
   "de.keyboardsurfer.android.widget" % "crouton" % "1.8.1",
   "com.nostra13.universalimageloader" % "universal-image-loader" % "1.8.4",
   "com.j256.ormlite" % "ormlite-core" % "4.47",
   "com.j256.ormlite" % "ormlite-android" % "4.47"
 )
+
+libraryDependencies ++= Seq(
+  "com.github.gabrielemariotti.cards" % "library" % "1.0.0",
+  "net.simonvt.menudrawer" % "menudrawer" % "3.0.4" artifacts(Artifact("menudrawer", "aar", "aar"))
+)
+
 

@@ -39,7 +39,7 @@
 
 package com.github.shadowsocks
 
-import android.app.ProgressDialog
+import android.app.{Activity, ProgressDialog}
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -53,23 +53,14 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.WindowManager
-import android.widget.AbsListView
+import android.widget._
 import android.widget.AbsListView.OnScrollListener
-import android.widget.ArrayAdapter
-import android.widget.CheckBox
-import android.widget.CompoundButton
 import android.widget.CompoundButton.OnCheckedChangeListener
-import android.widget.ImageView
-import android.widget.ListAdapter
-import android.widget.ListView
-import android.widget.TextView
-import com.actionbarsherlock.app.SherlockActivity
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader
 import java.io.{ByteArrayOutputStream, ByteArrayInputStream, InputStream}
 import com.nostra13.universalimageloader.core.{DisplayImageOptions, ImageLoader, ImageLoaderConfiguration}
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer
 import com.google.analytics.tracking.android.EasyTracker
-import org.jraf.android.backport.switchwidget.Switch
 import com.github.shadowsocks.utils.{Utils, Scheme, Key}
 
 case class ProxiedApp(uid: Int, name: String, var proxied: Boolean)
@@ -106,7 +97,7 @@ object AppManager {
   }
 }
 
-class AppManager extends SherlockActivity with OnCheckedChangeListener with OnClickListener {
+class AppManager extends Activity with OnCheckedChangeListener with OnClickListener {
 
   val MSG_LOAD_START = 1
   val MSG_LOAD_FINISH = 2
@@ -218,7 +209,7 @@ class AppManager extends SherlockActivity with OnCheckedChangeListener with OnCl
 
   protected override def onCreate(savedInstanceState: Bundle) {
     super.onCreate(savedInstanceState)
-    getSupportActionBar.setTitle(R.string.proxied_help)
+    getActionBar.setTitle(R.string.proxied_help)
     this.setContentView(R.layout.layout_apps)
     this.overlay = View.inflate(this, R.layout.overlay, null).asInstanceOf[TextView]
     getWindowManager.addView(overlay, new
@@ -289,7 +280,7 @@ class AppManager extends SherlockActivity with OnCheckedChangeListener with OnCl
           appListView.setAdapter(adapter)
           appListView.setOnScrollListener(new AbsListView.OnScrollListener {
             def onScroll(view: AbsListView, firstVisibleItem: Int, visibleItemCount: Int,
-                         totalItemCount: Int) {
+              totalItemCount: Int) {
               if (visible) {
                 val name: String = apps(firstVisibleItem).name
                 if (name != null && name.length > 1) {
