@@ -37,27 +37,48 @@
  *
  */
 
-package com.github.shadowsocks.preferences
+package com.github.shadowsocks.fragment
 
-import android.content.Context
-import android.preference.EditTextPreference
-import android.util.AttributeSet
+import android.app.Fragment
+import android.view.{LayoutInflater, ViewGroup, View}
+import android.os.Bundle
+import com.github.shadowsocks.R
+import it.gmariotti.cardslib.library.view.CardView
+import it.gmariotti.cardslib.library.internal.{CardHeader, Card}
+import com.google.ads.{AdRequest, AdSize, AdView}
+import com.github.shadowsocks.view.AdCard
 
-class SummaryEditTextPreference(context: Context, attrs: AttributeSet, defStyle: Int)
-  extends EditTextPreference(context, attrs, defStyle) {
+object ProfileFragment {
+  lazy val instance = new ProfileFragment
+}
 
-  def this(context: Context, attrs: AttributeSet) = {
-    this(context, attrs, android.R.attr.editTextPreferenceStyle)
-    mDefaultSummary = getSummary
+class ProfileFragment extends Fragment {
+
+  lazy val scrollView = getActivity.findViewById(R.id.profile_scrollview).asInstanceOf[CardView]
+  lazy val adCard = getActivity.findViewById(R.id.ad_card).asInstanceOf[CardView]
+  lazy val headerCard = getActivity.findViewById(R.id.header_card).asInstanceOf[CardView]
+  lazy val historyCard = getActivity.findViewById(R.id.history_card).asInstanceOf[CardView]
+  lazy val realtimeCard = getActivity.findViewById(R.id.realtime_card).asInstanceOf[CardView]
+
+  override def onCreateView(inflater: LayoutInflater, container: ViewGroup,
+    savedInstanceState: Bundle): View = {
+    inflater.inflate(R.layout.profile, container, false)
   }
 
-  override def setSummary(summary: CharSequence) {
-    if (summary.toString.isEmpty) {
-      super.setSummary(mDefaultSummary)
-    } else {
-      super.setSummary(summary)
-    }
+  override def onActivityCreated(savedInstanceState: Bundle) {
+    super.onActivityCreated(savedInstanceState)
+    initCards()
   }
 
-  private var mDefaultSummary: CharSequence = getSummary
+  def initCards() {
+    initAdCard()
+  }
+
+  def initAdCard() {
+    //Create a Card
+    val card = new AdCard(getActivity)
+
+    //Set card in the cardView
+    adCard.setCard(card)
+  }
 }

@@ -37,13 +37,14 @@
  *
  */
 
-package com.github.shadowsocks.preferences
+package com.github.shadowsocks.preference
 
-import android.content.Context
+import android.content.{Intent, Context}
 import android.preference.EditTextPreference
 import android.util.AttributeSet
+import com.github.shadowsocks.utils.Action
 
-class PasswordEditTextPreference(context: Context, attrs: AttributeSet, defStyle: Int)
+class ProfileEditTextPreference(context: Context, attrs: AttributeSet, defStyle: Int)
   extends EditTextPreference(context, attrs, defStyle) {
 
   def this(context: Context, attrs: AttributeSet) = {
@@ -55,7 +56,16 @@ class PasswordEditTextPreference(context: Context, attrs: AttributeSet, defStyle
     if (summary.toString.isEmpty) {
       super.setSummary(mDefaultSummary)
     } else {
-      super.setSummary(summary.toString.map(c => "*").mkString)
+      super.setSummary(summary)
+    }
+    context.sendBroadcast(new Intent(Action.UPDATE_PREFS))
+  }
+
+  def resetSummary(summary: CharSequence) {
+    if (summary.toString.isEmpty) {
+      super.setSummary(mDefaultSummary)
+    } else {
+      super.setSummary(summary)
     }
   }
 

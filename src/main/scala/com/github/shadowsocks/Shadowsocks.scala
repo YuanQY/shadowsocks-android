@@ -36,6 +36,7 @@
  *                              HERE BE DRAGONS
  *
  */
+
 package com.github.shadowsocks
 
 import android.app._
@@ -63,7 +64,7 @@ import com.github.shadowsocks.database._
 import scala.collection.mutable.ListBuffer
 import com.github.shadowsocks.database.Profile
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader
-import com.github.shadowsocks.preferences.{ProfileEditTextPreference, PasswordEditTextPreference, SummaryEditTextPreference}
+import com.github.shadowsocks.preference.{ProfileEditTextPreference, PasswordEditTextPreference, SummaryEditTextPreference}
 import com.github.shadowsocks.utils._
 import com.github.shadowsocks.database.Item
 import com.github.shadowsocks.database.Category
@@ -72,7 +73,7 @@ import android.preference.PreferenceActivity.Header
 import scala.Some
 import com.github.shadowsocks.database.Item
 import com.github.shadowsocks.database.Category
-import com.github.shadowsocks.fragments.SettingsFragment
+import com.github.shadowsocks.fragment.{ProfileFragment, SettingsFragment}
 
 class ProfileIconDownloader(context: Context, connectTimeout: Int, readTimeout: Int)
   extends BaseImageDownloader(context, connectTimeout, readTimeout) {
@@ -315,19 +316,12 @@ class Shadowsocks
           getLayoutView(drawer.getContentContainer.getParent)
         }
       }
-      if (layoutView != null) {
-        val adView = {
-          new AdView(this, AdSize.SMART_BANNER, "a151becb8068b09")
-        }
-        layoutView.asInstanceOf[ViewGroup].addView(adView, 0)
-        adView.loadAd(new AdRequest)
-      }
+
     }
   }
 
   override def setContentView(layoutResId: Int) {
     drawer.setContentView(layoutResId)
-    initAdView()
     onContentChanged()
   }
 
@@ -408,7 +402,7 @@ class Shadowsocks
     val f = fragmentManager.findFragmentByTag(tag)
 
     if (f == null) {
-      return SettingsFragment.instance
+      return ProfileFragment.instance
     }
 
     f
