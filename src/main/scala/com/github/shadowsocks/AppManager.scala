@@ -43,7 +43,7 @@ import android.app.{Activity, ProgressDialog}
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.{Bitmap, PixelFormat}
+import android.graphics.PixelFormat
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -56,12 +56,10 @@ import android.view.WindowManager
 import android.widget._
 import android.widget.AbsListView.OnScrollListener
 import android.widget.CompoundButton.OnCheckedChangeListener
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader
-import java.io.{ByteArrayOutputStream, ByteArrayInputStream, InputStream}
 import com.nostra13.universalimageloader.core.{DisplayImageOptions, ImageLoader, ImageLoaderConfiguration}
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer
 import com.google.analytics.tracking.android.EasyTracker
-import com.github.shadowsocks.utils.{AppIconDownloader, Utils, Scheme, Key}
+import com.github.shadowsocks.utils.{AppIconDownloader, Scheme, Key}
 
 case class ProxiedApp(uid: Int, name: String, var proxied: Boolean)
 
@@ -87,12 +85,11 @@ object AppManager {
     val appList = packageManager.getInstalledApplications(0)
 
     appList.filter(_.uid >= 10000).map {
-      case a => {
+      case a =>
         val uid = a.uid
         val userName = uid.toString
         val proxied = proxiedApps.binarySearch(userName) >= 0
         new ProxiedApp(uid, userName, proxied)
-      }
     }.toArray
   }
 }
@@ -309,5 +306,4 @@ class AppManager extends Activity with OnCheckedChangeListener with OnClickListe
       super.handleMessage(msg)
     }
   }
-
 }

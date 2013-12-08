@@ -5,13 +5,56 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-  <TextView
-      android:id="@+id/card_main_inner_simple_title"
+  <LinearLayout
+      android:orientation="horizontal"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center"
-      android:textAppearance="?android:attr/textAppearanceLarge"
-      android:text="Default"
-      />
+      android:gravity="center_vertical"
+      android:paddingTop="4dp"
+      android:paddingBottom="4dp"
+      android:layout_height="96dp">
+
+    <ImageView
+        android:id="@+id/profile_icon"
+        android:layout_gravity="center_vertical"
+        android:layout_alignParentLeft="true"
+        android:scaleType="fitCenter"
+        android:layout_marginLeft="12dp"
+        android:layout_weight="1"
+        android:layout_width="80dp"
+        android:layout_height="80dp"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_toLeftOf="@+id/profile_icon"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="8dp"
+        android:layout_weight="7"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp"
+            android:gravity="left|bottom"
+            android:text="@string/profile_uri"
+            android:id="@+id/profile_uri_label"/>
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|bottom"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textSize="18sp"
+            android:id="@+id/profile_uri"/>
+    </LinearLayout>
+
+  </LinearLayout>
+
+  <View android:background="#ddd"
+      android:layout_height="1dp"
+      android:layout_marginTop="5dp"
+      android:layout_width="match_parent"
+      android:text="test"
+      android:layout_alignBottom="@+id/textView1"/>
 
 </LinearLayout>

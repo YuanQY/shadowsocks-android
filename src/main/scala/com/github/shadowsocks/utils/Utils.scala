@@ -106,8 +106,12 @@ object Utils {
   }
 
   def getBitmap(text: String, width: Int, height: Int, background: Int): Bitmap = {
+    getBitmap(text, width, height, background, 4)
+  }
+
+  def getBitmap(text: String, width: Int, height: Int, background: Int, scale: Int): Bitmap = {
     val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-    val size = bitmap.getHeight / 4
+    val size = bitmap.getHeight / scale
     val canvas = new Canvas(bitmap)
     canvas.drawColor(background)
     val paint = new Paint()
@@ -116,8 +120,8 @@ object Utils {
     val bounds = new Rect()
     paint.getTextBounds(text, 0, text.length, bounds)
     canvas
-      .drawText(text, (bitmap.getWidth - bounds.width()) / 2,
-      bitmap.getHeight - (bitmap.getHeight - bounds.height()) / 2, paint)
+      .drawText(text, (bitmap.getWidth - bounds.width()) / 2.0f,
+      bitmap.getHeight - (bitmap.getHeight - bounds.height()) / 2.0f, paint)
     bitmap
   }
 

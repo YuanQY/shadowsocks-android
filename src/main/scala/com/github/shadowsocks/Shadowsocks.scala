@@ -42,7 +42,7 @@ package com.github.shadowsocks
 import android.app._
 import android.content._
 import android.content.res.AssetManager
-import android.graphics.{Color, Bitmap, Typeface}
+import android.graphics.{Color, Typeface}
 import android.os._
 import android.preference._
 import android.util.Log
@@ -62,13 +62,14 @@ import net.simonvt.menudrawer.MenuDrawer
 import com.github.shadowsocks.database._
 import scala.collection.mutable.ListBuffer
 import com.github.shadowsocks.database.Profile
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader
 import com.github.shadowsocks.utils._
 import com.google.zxing.integration.android.IntentIntegrator
 import scala.Some
 import com.github.shadowsocks.database.Item
 import com.github.shadowsocks.database.Category
 import com.github.shadowsocks.fragment.{ProfileFragment, SettingsFragment}
+import com.atermenji.android.iconicdroid.IconicFontDrawable
+import com.atermenji.android.iconicdroid.icon.FontAwesomeIcon
 
 object Typefaces {
   def get(c: Context, assetPath: String): Typeface = {
@@ -350,27 +351,30 @@ class Shadowsocks
         spawn {
           reset()
           currentProfile = profileManager.create()
+          navigateToFragment(drawer.getContentContainer.getId, getFragment(ProfileFragment.TAG),
+            ProfileFragment.TAG, back = false)
+          commitTransactions()
           h.sendEmptyMessage(0)
         }
+        return
       }
     }
 
     navigateToFragment(drawer.getContentContainer.getId, getFragment(ProfileFragment.TAG),
-      ProfileFragment.TAG, false)
+      ProfileFragment.TAG, back = false)
     commitTransactions()
   }
 
   def openSettings() {
     currentFragmentTag = SettingsFragment.TAG
     navigateToFragment(drawer.getContentContainer.getId, getFragment(SettingsFragment.TAG),
-      SettingsFragment.TAG, true)
+      SettingsFragment.TAG, back = true)
     commitTransactions()
   }
 
   def ensureTransaction(): FragmentTransaction = {
     if (fragmentTransaction == null) {
       fragmentTransaction = fragmentManager.beginTransaction()
-      fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
     }
 
     fragmentTransaction
@@ -431,10 +435,35 @@ class Shadowsocks
 
   def newProfile(id: Int) {
 
+    val items = getResources.getStringArray(R.array.add_profile_methods)
+
+    val adapter = new
+        ArrayAdapter[String](this, android.R.layout.select_dialog_item, android.R.id.text1, items) {
+      override def getView(pos: Int, convertView: View, parent: ViewGroup): View = {
+        val v = super.getView(pos, convertView, parent)
+        val tv = v.findViewById(android.R.id.text1).asInstanceOf[TextView]
+        val icon = new IconicFontDrawable(getContext)
+
+        if (pos == 0) {
+          icon.setIcon(FontAwesomeIcon.QRCODE)
+        } else {
+          icon.setIcon(FontAwesomeIcon.WRENCH)
+        }
+        icon.setIconColor(Color.DKGRAY)
+          icon.setIntrinsicHeight(Utils.dpToPx(getContext, 32).toInt)
+          icon.setIntrinsicWidth(Utils.dpToPx(getContext, 32).toInt)
+
+        tv.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null)
+        tv.setCompoundDrawablePadding(Utils.dpToPx(getContext, 8).toInt)
+
+        v
+      }
+    }
+
     val builder = new AlertDialog.Builder(this)
     builder
       .setTitle(R.string.add_profile)
-      .setItems(R.array.add_profile_methods, new DialogInterface.OnClickListener() {
+      .setAdapter(adapter, new DialogInterface.OnClickListener() {
       def onClick(dialog: DialogInterface, which: Int) {
         which match {
           case 0 =>

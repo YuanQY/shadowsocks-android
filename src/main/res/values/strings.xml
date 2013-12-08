@@ -89,5 +89,6 @@
     <item>Scan QR code</item>
     <item>Manually Setting</item>
   </string-array>
+  <string name="profile_uri">Profile URI</string>
 
 </resources>

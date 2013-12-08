@@ -6,9 +6,9 @@ import android.util.{Log, Base64}
 
 object Parser {
   val TAG = "ShadowParser"
-  def parse (data: String): Option[Profile] = {
+
+  def parse(data: String): Option[Profile] = {
     try {
-      Log.d(TAG, data)
       val uri = Uri.parse(data.trim)
       if (uri.getScheme == Scheme.SS) {
         val encoded = data.replace(Scheme.SS + "://", "")
@@ -27,8 +27,15 @@ object Parser {
         return Some(profile)
       }
     } catch {
-      case ex : Exception => Log.e(TAG, "parser error", ex)// Ignore
+      case ex: Exception => Log.e(TAG, "parser error", ex) // Ignore
     }
     None
+  }
+
+  def parse(profile: Profile): String = {
+    val plain = "%s:%s@%s:%d"
+      .format(profile.method, profile.password, profile.host, profile.remotePort)
+    val encoded = Base64.encodeToString(plain.getBytes("UTF-8"), Base64.NO_PADDING)
+    "%s://%s".format(Scheme.SS, encoded)
   }
 }

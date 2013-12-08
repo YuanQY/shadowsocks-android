@@ -46,6 +46,7 @@ import com.github.shadowsocks.{Shadowsocks, R}
 import it.gmariotti.cardslib.library.view.CardView
 import it.gmariotti.cardslib.library.internal.{CardHeader, Card}
 import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener
+import com.github.shadowsocks.cards.HeaderCard
 
 object ProfileFragment {
   val TAG = "com.github.shadowsocks.fragment.ProfileFragment"
@@ -56,11 +57,12 @@ object ProfileFragment {
 class ProfileFragment extends Fragment {
 
   lazy val activity = getActivity.asInstanceOf[Shadowsocks]
-  lazy val currentProfile = activity.currentProfile
 
   lazy val scrollView = activity.findViewById(R.id.profile_scrollview).asInstanceOf[CardView]
   lazy val historyCard = activity.findViewById(R.id.history_card).asInstanceOf[CardView]
   lazy val realtimeCard = activity.findViewById(R.id.realtime_card).asInstanceOf[CardView]
+
+  def currentProfile = activity.currentProfile
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup,
     savedInstanceState: Bundle): View = {
@@ -85,10 +87,10 @@ class ProfileFragment extends Fragment {
 
   def initHeaderCard() {
     val headerCard = activity.findViewById(R.id.header_card).asInstanceOf[CardView]
-    val card = new Card(getActivity, R.layout.profile_header_card)
+    val card = new HeaderCard(getActivity, currentProfile)
     val cardHeader = new CardHeader(getActivity)
 
-    cardHeader.setTitle(currentProfile.name)
+    cardHeader.setTitle(currentProfile.name.toUpperCase)
     card.setTitle(currentProfile.host)
     
     card.addCardHeader(cardHeader)
