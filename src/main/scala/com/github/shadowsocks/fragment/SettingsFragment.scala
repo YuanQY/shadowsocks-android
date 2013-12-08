@@ -61,6 +61,8 @@ class SettingsFragment extends PreferenceFragment {
   val FEATRUE_PREFS = Array(Key.isGFWList, Key.isGlobalProxy, Key.proxyedApps, Key.isTrafficStat,
     Key.isAutoConnect)
 
+  def activity = getActivity.asInstanceOf[Shadowsocks]
+
   // Help functions
   def updateListPreference(pref: Preference, value: String) {
     pref.setSummary(value)
@@ -128,20 +130,20 @@ class SettingsFragment extends PreferenceFragment {
   private def updatePreferenceScreen() {
     for (name <- PROXY_PREFS) {
       val pref = findPreference(name)
-      updatePreference(pref, name, getActivity.asInstanceOf[Shadowsocks].currentProfile)
+      updatePreference(pref, name, activity.currentProfile)
     }
     for (name <- FEATRUE_PREFS) {
       val pref = findPreference(name)
-      updatePreference(pref, name, getActivity.asInstanceOf[Shadowsocks].currentProfile)
+      updatePreference(pref, name, activity.currentProfile)
     }
   }
 
   override def onCreate(bundle: Bundle) {
-    val filter = new IntentFilter()
-
     super.onCreate(bundle)
+
     addPreferencesFromResource(R.xml.pref_proxy)
 
+    val filter = new IntentFilter()
     filter.addAction(Action.UPDATE_FRAGMENT)
     receiver = new BroadcastReceiver {
       def onReceive(p1: Context, p2: Intent) {
@@ -165,5 +167,7 @@ class SettingsFragment extends PreferenceFragment {
 
   override def onPause() {
     super.onPause()
+
+    activity.currentProfile = activity.profileManager.save()
   }
 }

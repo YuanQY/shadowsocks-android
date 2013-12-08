@@ -132,7 +132,7 @@ class Shadowsocks
   lazy val menuAdapter = new MenuAdapter(this, getMenuList)
   lazy val listView = new ListView(this)
   lazy val profileManager =
-    new ProfileManager(settings, getApplication.asInstanceOf[ShadowsocksApplication].dbHelper)
+    new ProfileManager(getBaseContext, getApplication.asInstanceOf[ShadowsocksApplication].dbHelper)
   lazy val fragmentManager = getFragmentManager
 
   private val handler: Handler = new Handler {

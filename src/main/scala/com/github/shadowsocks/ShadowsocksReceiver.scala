@@ -69,9 +69,8 @@ class ShadowsocksReceiver extends BroadcastReceiver {
     try {
       versionName = context.getPackageManager.getPackageInfo(context.getPackageName, 0).versionName
     } catch {
-      case e: PackageManager.NameNotFoundException => {
+      case e: PackageManager.NameNotFoundException =>
         versionName = "NONE"
-      }
     }
     val isAutoConnect: Boolean = settings.getBoolean(Key.isAutoConnect, false)
     val isInstalled: Boolean = status.getBoolean(versionName, false)

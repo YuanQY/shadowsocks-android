@@ -44,17 +44,12 @@
             android:layout_height="wrap_content"
             android:gravity="left|bottom"
             android:textColor="@android:color/holo_blue_dark"
+            android:singleLine="true"
             android:textSize="18sp"
+            android:layout_marginTop="4dp"
             android:id="@+id/profile_uri"/>
     </LinearLayout>
 
   </LinearLayout>
-
-  <View android:background="#ddd"
-      android:layout_height="1dp"
-      android:layout_marginTop="5dp"
-      android:layout_width="match_parent"
-      android:text="test"
-      android:layout_alignBottom="@+id/textView1"/>
 
 </LinearLayout>

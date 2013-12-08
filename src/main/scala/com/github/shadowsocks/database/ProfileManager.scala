@@ -43,8 +43,11 @@ import android.util.Log
 import com.github.shadowsocks._
 import android.content.{SharedPreferences, Context}
 import com.github.shadowsocks.utils.Key
+import android.preference.PreferenceManager
 
-class ProfileManager(settings: SharedPreferences, dbHelper: DBHelper) {
+class ProfileManager(context: Context, dbHelper: DBHelper) {
+
+  def settings = PreferenceManager.getDefaultSharedPreferences(context)
 
   def createOrUpdateProfile(profile: Profile): Boolean = {
     try {
@@ -150,16 +153,14 @@ class ProfileManager(settings: SharedPreferences, dbHelper: DBHelper) {
     profile.remotePort = try {
       Integer.valueOf(settings.getString(Key.remotePort, "1984"))
     } catch {
-      case ex: NumberFormatException => {
+      case ex: NumberFormatException =>
         1984
-      }
     }
     profile.localPort = try {
       Integer.valueOf(settings.getString(Key.localPort, "1984"))
     } catch {
-      case ex: NumberFormatException => {
+      case ex: NumberFormatException =>
         1984
-      }
     }
     profile.individual = settings.getString(Key.proxied, "")
 

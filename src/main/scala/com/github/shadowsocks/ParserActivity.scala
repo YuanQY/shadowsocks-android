@@ -2,10 +2,9 @@ package com.github.shadowsocks
 
 import android.os.{Message, Handler, Bundle}
 import android.app.{ProgressDialog, AlertDialog, Activity}
-import android.content.{Intent, DialogInterface}
+import android.content.DialogInterface
 import com.github.shadowsocks.database.{ProfileManager, Profile}
-import com.github.shadowsocks.utils.{Parser, Action}
-import android.preference.PreferenceManager
+import com.github.shadowsocks.utils.Parser
 import android.view.WindowManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -39,7 +38,9 @@ class ParserActivity extends Activity {
   }
 
   def showAsPopup(activity: Activity) {
-    activity.getWindow.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+    activity
+      .getWindow
+      .setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND,
       WindowManager.LayoutParams.FLAG_DIM_BEHIND)
     val params = activity.getWindow.getAttributes
     params.alpha = 1.0f
@@ -55,7 +56,7 @@ class ParserActivity extends Activity {
     h.postDelayed(new Runnable {
       def run() {
         val profileManager =
-          new ProfileManager(PreferenceManager.getDefaultSharedPreferences(getBaseContext),
+          new ProfileManager(getBaseContext,
             getApplication.asInstanceOf[ShadowsocksApplication].dbHelper)
         profileManager.createOrUpdateProfile(profile)
         profileManager.reload(profile.id)
@@ -73,5 +74,4 @@ class ParserActivity extends Activity {
       }
     }
   }
-
 }
