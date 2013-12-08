@@ -13,10 +13,10 @@ class ProfileIconDownloader(context: Context, connectTimeout: Int, readTimeout: 
   }
 
   override def getStreamFromOtherSource(imageUri: String, extra: AnyRef): InputStream = {
-    val text = imageUri.substring(Scheme.PROFILE.length, Scheme.PROFILE.length + 1)
+    val text = imageUri.substring(Scheme.PROFILE.length, Scheme.PROFILE.length + 2).toUpperCase
     val size = Utils.dpToPx(context, 80).toInt
     val idx = imageUri.length % 5
-    val color = Seq(Color.MAGENTA, Color.GREEN, Color.BLACK, Color.BLUE, Color.DKGRAY)(
+    val color = Seq(Color.MAGENTA, Color.LTGRAY, Color.GREEN, Color.BLUE, Color.DKGRAY)(
       idx)
     val bitmap = Utils.getBitmap(text, size, size, color, 2)
 

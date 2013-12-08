@@ -120,8 +120,8 @@ object Utils {
     val bounds = new Rect()
     paint.getTextBounds(text, 0, text.length, bounds)
     canvas
-      .drawText(text, (bitmap.getWidth - bounds.width()) / 2.0f,
-      bitmap.getHeight - (bitmap.getHeight - bounds.height()) / 2.0f, paint)
+      .drawText(text, (bitmap.getWidth - bounds.width()) / 2.2f,
+      bitmap.getHeight - (bitmap.getHeight - bounds.height()) / 2.2f, paint)
     bitmap
   }
 

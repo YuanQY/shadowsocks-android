@@ -141,7 +141,6 @@ class SettingsFragment extends PreferenceFragment {
 
     super.onCreate(bundle)
     addPreferencesFromResource(R.xml.pref_proxy)
-    addPreferencesFromResource(R.xml.pref_feature)
 
     filter.addAction(Action.UPDATE_FRAGMENT)
     receiver = new BroadcastReceiver {

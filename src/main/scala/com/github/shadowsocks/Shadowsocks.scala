@@ -375,6 +375,7 @@ class Shadowsocks
   def ensureTransaction(): FragmentTransaction = {
     if (fragmentTransaction == null) {
       fragmentTransaction = fragmentManager.beginTransaction()
+      fragmentTransaction.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
     }
 
     fragmentTransaction
