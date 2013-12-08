@@ -48,8 +48,8 @@ import com.github.shadowsocks.preference.{ProfileEditTextPreference, SummaryEdit
 import com.github.shadowsocks.database.Profile
 
 object SettingsFragment {
-
-  lazy val instance = new SettingsFragment
+  val TAG = "com.github.shadowsocks.fragment.SettingsFragment"
+  def instance = new SettingsFragment
 }
 
 class SettingsFragment extends PreferenceFragment {
@@ -161,6 +161,7 @@ class SettingsFragment extends PreferenceFragment {
   override def onResume() {
     super.onResume()
     setPreferenceEnabled()
+    updatePreferenceScreen()
   }
 
   override def onPause() {

@@ -42,23 +42,25 @@ package com.github.shadowsocks.fragment
 import android.app.Fragment
 import android.view.{LayoutInflater, ViewGroup, View}
 import android.os.Bundle
-import com.github.shadowsocks.R
+import com.github.shadowsocks.{Shadowsocks, R}
 import it.gmariotti.cardslib.library.view.CardView
 import it.gmariotti.cardslib.library.internal.{CardHeader, Card}
-import com.google.ads.{AdRequest, AdSize, AdView}
-import com.github.shadowsocks.view.AdCard
+import it.gmariotti.cardslib.library.internal.Card.OnCardClickListener
 
 object ProfileFragment {
-  lazy val instance = new ProfileFragment
+  val TAG = "com.github.shadowsocks.fragment.ProfileFragment"
+
+  def instance = new ProfileFragment
 }
 
 class ProfileFragment extends Fragment {
 
-  lazy val scrollView = getActivity.findViewById(R.id.profile_scrollview).asInstanceOf[CardView]
-  lazy val adCard = getActivity.findViewById(R.id.ad_card).asInstanceOf[CardView]
-  lazy val headerCard = getActivity.findViewById(R.id.header_card).asInstanceOf[CardView]
-  lazy val historyCard = getActivity.findViewById(R.id.history_card).asInstanceOf[CardView]
-  lazy val realtimeCard = getActivity.findViewById(R.id.realtime_card).asInstanceOf[CardView]
+  lazy val activity = getActivity.asInstanceOf[Shadowsocks]
+  lazy val currentProfile = activity.currentProfile
+
+  lazy val scrollView = activity.findViewById(R.id.profile_scrollview).asInstanceOf[CardView]
+  lazy val historyCard = activity.findViewById(R.id.history_card).asInstanceOf[CardView]
+  lazy val realtimeCard = activity.findViewById(R.id.realtime_card).asInstanceOf[CardView]
 
   override def onCreateView(inflater: LayoutInflater, container: ViewGroup,
     savedInstanceState: Bundle): View = {
@@ -72,13 +74,30 @@ class ProfileFragment extends Fragment {
 
   def initCards() {
     initAdCard()
+    initHeaderCard()
   }
 
   def initAdCard() {
-    //Create a Card
-    val card = new AdCard(getActivity)
-
-    //Set card in the cardView
+    val adCard = activity.findViewById(R.id.ad_card).asInstanceOf[CardView]
+    val card = new Card(getActivity, R.layout.profile_ad_card)
     adCard.setCard(card)
+  }
+
+  def initHeaderCard() {
+    val headerCard = activity.findViewById(R.id.header_card).asInstanceOf[CardView]
+    val card = new Card(getActivity, R.layout.profile_header_card)
+    val cardHeader = new CardHeader(getActivity)
+
+    cardHeader.setTitle(currentProfile.name)
+    card.setTitle(currentProfile.host)
+    
+    card.addCardHeader(cardHeader)
+    card.setOnClickListener(new OnCardClickListener {
+      override def onClick(card: Card, view: View) {
+        activity.openSettings()
+      }
+    })
+
+    headerCard.setCard(card)
   }
 }

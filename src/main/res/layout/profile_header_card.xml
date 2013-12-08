@@ -5,11 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-
-  <View
-      style="@style/card.main_layout"
-      android:layout_width="wrap_content"
-      android:layout_height="@dimen/card_base_empty_height"/>
-
+  <TextView
+      android:id="@+id/card_main_inner_simple_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:textAppearance="?android:attr/textAppearanceLarge"
+      android:text="Default"
+      />
 
 </LinearLayout>

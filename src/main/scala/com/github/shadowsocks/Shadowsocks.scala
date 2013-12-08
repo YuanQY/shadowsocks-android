@@ -57,44 +57,18 @@ import android.net.{Uri, VpnService}
 import android.webkit.{WebViewClient, WebView}
 import android.app.backup.BackupManager
 import scala.concurrent.ops._
-import com.google.ads.{AdRequest, AdSize, AdView}
 import net.simonvt.menudrawer.MenuDrawer
 
 import com.github.shadowsocks.database._
 import scala.collection.mutable.ListBuffer
 import com.github.shadowsocks.database.Profile
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader
-import com.github.shadowsocks.preference.{ProfileEditTextPreference, PasswordEditTextPreference, SummaryEditTextPreference}
 import com.github.shadowsocks.utils._
-import com.github.shadowsocks.database.Item
-import com.github.shadowsocks.database.Category
 import com.google.zxing.integration.android.IntentIntegrator
-import android.preference.PreferenceActivity.Header
 import scala.Some
 import com.github.shadowsocks.database.Item
 import com.github.shadowsocks.database.Category
 import com.github.shadowsocks.fragment.{ProfileFragment, SettingsFragment}
-
-class ProfileIconDownloader(context: Context, connectTimeout: Int, readTimeout: Int)
-  extends BaseImageDownloader(context, connectTimeout, readTimeout) {
-
-  def this(context: Context) {
-    this(context, 0, 0)
-  }
-
-  override def getStreamFromOtherSource(imageUri: String, extra: AnyRef): InputStream = {
-    val text = imageUri.substring(Scheme.PROFILE.length)
-    val size = Utils.dpToPx(context, 16).toInt
-    val idx = text.getBytes.last % 6
-    val color = Seq(Color.MAGENTA, Color.GREEN, Color.YELLOW, Color.BLUE, Color.DKGRAY, Color.CYAN)(
-      idx)
-    val bitmap = Utils.getBitmap(text, size, size, color)
-
-    val os = new ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.PNG, 100, os)
-    new ByteArrayInputStream(os.toByteArray)
-  }
-}
 
 object Typefaces {
   def get(c: Context, assetPath: String): Typeface = {
@@ -127,8 +101,6 @@ object Shadowsocks {
 
   // Flags
   var vpnEnabled = -1
-
-
 }
 
 class Shadowsocks
@@ -149,6 +121,7 @@ class Shadowsocks
   var switchButton: Switch = null
   var progressDialog: ProgressDialog = null
   var fragmentTransaction: FragmentTransaction = null
+  var currentFragmentTag = ProfileFragment.TAG
 
   lazy val settings = PreferenceManager.getDefaultSharedPreferences(this)
   lazy val status = getSharedPreferences(Key.status, Context.MODE_PRIVATE)
@@ -316,7 +289,6 @@ class Shadowsocks
           getLayoutView(drawer.getContentContainer.getParent)
         }
       }
-
     }
   }
 
@@ -365,7 +337,6 @@ class Shadowsocks
 
     // Initialize fragments
     if (savedInstanceState != null) {
-
     }
 
     // Update status
@@ -384,12 +355,19 @@ class Shadowsocks
       }
     }
 
-    attachFragment(drawer.getContentContainer.getId, getFragment(STATE_CURRENT_FRAGMENT),
-      STATE_CURRENT_FRAGMENT)
+    navigateToFragment(drawer.getContentContainer.getId, getFragment(ProfileFragment.TAG),
+      ProfileFragment.TAG, false)
     commitTransactions()
   }
 
-  def ensureTransaction(): FragmentTransaction  = {
+  def openSettings() {
+    currentFragmentTag = SettingsFragment.TAG
+    navigateToFragment(drawer.getContentContainer.getId, getFragment(SettingsFragment.TAG),
+      SettingsFragment.TAG, true)
+    commitTransactions()
+  }
+
+  def ensureTransaction(): FragmentTransaction = {
     if (fragmentTransaction == null) {
       fragmentTransaction = fragmentManager.beginTransaction()
       fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -399,31 +377,24 @@ class Shadowsocks
   }
 
   def getFragment(tag: String): Fragment = {
-    val f = fragmentManager.findFragmentByTag(tag)
+    var f = fragmentManager.findFragmentByTag(tag)
 
     if (f == null) {
-      return ProfileFragment.instance
+      tag match {
+        case ProfileFragment.TAG => f = ProfileFragment.instance
+        case SettingsFragment.TAG => f = SettingsFragment.instance
+        case _ => f = ProfileFragment.instance
+      }
     }
 
     f
   }
 
-  def attachFragment(layout: Int, f: Fragment, tag: String) {
-    if (f != null) {
-      if (f.isDetached) {
-        ensureTransaction()
-        fragmentTransaction.attach(f)
-      } else if (!f.isAdded) {
-        ensureTransaction()
-        fragmentTransaction.add(layout, f, tag)
-      }
-    }
-  }
-
-  def detachFragment(f: Fragment) {
-    if (f != null && !f.isDetached) {
+  def navigateToFragment(layout: Int, f: Fragment, tag: String, back: Boolean) {
+    if (f != null && !f.isAdded) {
       ensureTransaction()
-      fragmentTransaction.detach(f)
+      fragmentTransaction.replace(layout, f, tag)
+      if (back) fragmentTransaction.addToBackStack(null)
     }
   }
 

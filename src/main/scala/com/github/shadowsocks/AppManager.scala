@@ -61,7 +61,7 @@ import java.io.{ByteArrayOutputStream, ByteArrayInputStream, InputStream}
 import com.nostra13.universalimageloader.core.{DisplayImageOptions, ImageLoader, ImageLoaderConfiguration}
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer
 import com.google.analytics.tracking.android.EasyTracker
-import com.github.shadowsocks.utils.{Utils, Scheme, Key}
+import com.github.shadowsocks.utils.{AppIconDownloader, Utils, Scheme, Key}
 
 case class ProxiedApp(uid: Int, name: String, var proxied: Boolean)
 
@@ -307,24 +307,6 @@ class AppManager extends Activity with OnCheckedChangeListener with OnClickListe
           }
       }
       super.handleMessage(msg)
-    }
-  }
-
-  class AppIconDownloader(context: Context, connectTimeout: Int, readTimeout: Int)
-    extends BaseImageDownloader(context, connectTimeout, readTimeout) {
-
-    def this(context: Context) {
-      this(context, 0, 0)
-    }
-
-    override def getStreamFromOtherSource(imageUri: String, extra: AnyRef): InputStream = {
-      val uid = imageUri.substring(Scheme.APP.length).toInt
-      val drawable = Utils.getAppIcon(getBaseContext, uid)
-      val bitmap = Utils.drawableToBitmap(drawable)
-
-      val os = new ByteArrayOutputStream()
-      bitmap.compress(Bitmap.CompressFormat.PNG, 100, os)
-      new ByteArrayInputStream(os.toByteArray)
     }
   }
 
